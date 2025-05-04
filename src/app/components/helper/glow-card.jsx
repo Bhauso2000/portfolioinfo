@@ -74,10 +74,10 @@ const GlowCard = ({ children, identifier }) => {
     RESTYLE();
 
     // Now you can safely use document here
-    document.body.addEventListener("pointermove", UPDATE);
+    // document.body.addEventListener("pointermove", UPDATE);
 
     return () => {
-      document.body.removeEventListener("pointermove", UPDATE);
+      // document.body.removeEventListener("pointermove", UPDATE);
     };
   }, [isClient]); // This effect runs after the component has mounted on the client side
 
