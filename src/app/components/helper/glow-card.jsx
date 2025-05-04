@@ -1,12 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const GlowCard = ({ children, identifier }) => {
   const containerRef = useRef(null);
   const cardRef = useRef(null);
 
+  // State to check if component has mounted
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
+    // Set isClient to true once the component has mounted (on client-side)
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return; // Avoid SSR execution
+
     const CONTAINER = containerRef.current;
     const CARD = cardRef.current;
 
@@ -63,14 +73,13 @@ const GlowCard = ({ children, identifier }) => {
 
     RESTYLE();
 
-    // Uncomment if you want the glow to follow the pointer
-    // document.body.addEventListener("pointermove", UPDATE);
-    UPDATE();
+    // Now you can safely use document here
+    document.body.addEventListener("pointermove", UPDATE);
 
     return () => {
-      // document.body.removeEventListener("pointermove", UPDATE);
+      document.body.removeEventListener("pointermove", UPDATE);
     };
-  }, []);
+  }, [isClient]); // This effect runs after the component has mounted on the client side
 
   return (
     <div ref={containerRef} className={`glow-container glow-container-${identifier}`}>
